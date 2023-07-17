@@ -30,7 +30,7 @@
 					</div>
 				</div>
 			</div>
-			<div class="list-group" id="lead-list">
+			<div class="xlist-group row" id="lead-list">
 				<?php 
 				$uwhere = "";
 				if($_settings->userdata('type') != 1)
@@ -40,10 +40,11 @@
 				$leads = $conn->query("SELECT l.*,CONCAT(c.lastname,', ', c.firstname, '', COALESCE(c.middlename,'')) as client, c.email FROM `lead_list` l inner join client_list c on c.lead_id = l.id where l.in_opportunity = 0 {$uwhere} order by l.`status` asc, unix_timestamp(l.date_created) asc ");
 				while($row = $leads->fetch_assoc()):
 				?>
-				<div class="list-group-item list-group-item-action list-item rounded-0">
+                <div class="col-lg-4">
+				    <div class="list-group-item list-group-item-action list-item rounded-0">
 					<h4 class="truncate-1"><?= $row['remarks'] ?></h4>
 					<div class="row">
-						<div class="col-lg-6 col-sm-12">
+						<div class="col-lg-12 col-sm-12">
 							<div class="d-flex">
 								<div class="col-auto text-muted pl-3">Ref. Code:</div>
 								<div class="col-auto flex-grow-1 flex-shrink-1"><p class="m-0 truncate-1"><b><?= $row['code'] ?></b></p></div>
@@ -56,55 +57,78 @@
 								<div class="col-auto text-muted pl-3">Email:</div>
 								<div class="col-auto flex-grow-1 flex-shrink-1"><p class="m-0 truncate-1"><b><?= $row['email'] ?></b></p></div>
 							</div>
+                            <div class="d-flex">
+                                <div class="col-auto text-muted pl-3">Interested In:</div>
+                                <div class="col-auto flex-grow-1 flex-shrink-1"><p class="m-0 truncate-1"><b><?= $row['interested_in'] ?></b></p></div>
+                            </div>
+                            <div class="d-flex">
+                                <div class="col-auto text-muted pl-3">Assigned To:</div>
+                                <div class="col-auto flex-grow-1 flex-shrink-1"><p class="m-0 truncate-1"><b><?= (isset($user_arr[$row['assigned_to']])) ? ucwords($user_arr[$row['assigned_to']]) : "Not Assigned Yet." ?></b></p></div>
+                            </div>
 						</div>
-						<div class="col-lg-6 col-sm-12">
+						<div class="col-lg-12 col-sm-12">
+
 							<div class="d-flex">
-								<div class="col-auto text-muted pl-3">Interested In:</div>
-								<div class="col-auto flex-grow-1 flex-shrink-1"><p class="m-0 truncate-1"><b><?= $row['interested_in'] ?></b></p></div>
-							</div>
-							<div class="d-flex">
-								<div class="col-auto text-muted pl-3">Assigned To:</div>
-								<div class="col-auto flex-grow-1 flex-shrink-1"><p class="m-0 truncate-1"><b><?= (isset($user_arr[$row['assigned_to']])) ? ucwords($user_arr[$row['assigned_to']]) : "Not Assigned Yet." ?></b></p></div>
-							</div>
-							<div class="d-flex">
-								<div class="col-auto text-muted pl-3">Status:</div>
-								<div class="col-auto flex-grow-1 flex-shrink-1">
-									<?php 
-										switch($row['status']){
-											case 0:
-												echo '<span class="badge badge-primary bg-gradient-primary px-3 rounded-pill">New/Prospect</span>';
-												break;
-											case 1:
-												echo '<span class="badge badge-light bg-gradient-light border px-3 rounded-pill">Open</span>';
-												break;
-											case 2:
-												echo '<span class="badge badge-primary bg-gradient-primary px-3 rounded-pill">Working</span>';
-												break;
-											case 3:
-												echo '<span class="badge badge-danger bg-gradient-danger px-3 rounded-pill">Not a Target</span>';
-												break;
-											case 4:
-												echo '<span class="badge badge-danger bg-gradient-danger px-3 rounded-pill">Disqualified</span>';
-												break;
-											case 5:
-												echo '<span class="badge badge-info bg-gradient-info px-3 rounded-pill">Nurture</span>';
-												break;
-											case 6:
-												echo '<span class="badge badge-success bg-gradient-success px-3 rounded-pill">Opportunity Created</span>';
-												break;
-											case 7:
-												echo '<span class="badge badge-danger bg-gradient-danger px-3 rounded-pill">Opportunity Lost</span>';
-												break;
-											case 8:
-												echo '<span class="badge badge-danger bg-gradient-danger px-3 rounded-pill">Inactive</span>';
-												break;
-											default:
-												echo '<span class="badge badge-light bg-gradient-light border px-3 rounded-pill">N/A</span>';
-													break;
-										}
-									?>
-								</div>
-							</div>
+                                <div xclass="d-flex">
+                                    <div class="col-auto text-muted pl-3">Status:</div>
+                                    <div class="col-auto flex-grow-1 flex-shrink-1">
+                                        <?php
+                                        switch($row['status']){
+                                            case 0:
+                                                echo '<span class="badge badge-primary bg-gradient-primary px-3 rounded-pill">New/Prospect</span>';
+                                                break;
+                                            case 1:
+                                                echo '<span class="badge badge-light bg-gradient-light border px-3 rounded-pill">Open</span>';
+                                                break;
+                                            case 2:
+                                                echo '<span class="badge badge-primary bg-gradient-primary px-3 rounded-pill">Working</span>';
+                                                break;
+                                            case 3:
+                                                echo '<span class="badge badge-danger bg-gradient-danger px-3 rounded-pill">Not a Target</span>';
+                                                break;
+                                            case 4:
+                                                echo '<span class="badge badge-danger bg-gradient-danger px-3 rounded-pill">Disqualified</span>';
+                                                break;
+                                            case 5:
+                                                echo '<span class="badge badge-info bg-gradient-info px-3 rounded-pill">Nurture</span>';
+                                                break;
+                                            case 6:
+                                                echo '<span class="badge badge-success bg-gradient-success px-3 rounded-pill">Opportunity Created</span>';
+                                                break;
+                                            case 7:
+                                                echo '<span class="badge badge-danger bg-gradient-danger px-3 rounded-pill">Opportunity Lost</span>';
+                                                break;
+                                            case 8:
+                                                echo '<span class="badge badge-danger bg-gradient-danger px-3 rounded-pill">Inactive</span>';
+                                                break;
+                                            default:
+                                                echo '<span class="badge badge-light bg-gradient-light border px-3 rounded-pill">N/A</span>';
+                                                break;
+                                        }
+                                        ?>
+                                    </div>
+                                </div>
+                                <div xclass="d-flex">
+                                    <div class="col-auto text-muted pl-3">Call Logs:</div>
+                                    <div class="col-auto text-muted pl-3">
+                                        <?php
+                                        $callLogs = $conn->query("Select * From log_list WHERE lead_id = {$row['id']}");
+                                        echo "(<a href='./?page=view_lead&view=logs&id={$row['id']}'>{$callLogs->num_rows}</a>)";
+                                        ?>
+                                    </div>
+                                </div>
+
+                                <div xclass="d-flex">
+                                    <div class="col-auto text-muted pl-3">Notes:</div>
+                                    <div class="col-auto text-muted pl-3">
+                                        <?php
+                                        $callLogs = $conn->query("Select * From note_list WHERE lead_id = {$row['id']}");
+                                        echo "(<a href='./?page=view_lead&view=notes&id={$row['id']}'>{$callLogs->num_rows}</a>)";
+                                        ?>
+                                    </div>
+                                </div>
+                            </div>
+
 						</div>
 					</div>
 					<div class="clear-fix my-2"></div>
@@ -119,6 +143,7 @@
 					</div>
 
 				</div>
+                </div>
 				<?php endwhile; ?>
 			</div>
 			<div class="text-center d-none" id="noData"><center>No result.</center></div>
